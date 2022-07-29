@@ -1,11 +1,12 @@
-import React from 'react';
+// import React from 'react';
+// import LoginModal from './LoginModal';
 
-const Login = () => {
-    return (
-        <div>
-            <h2>Please Login</h2>
-        </div>
-    );
-};
+// const Login = () => {
+//     return (
+//         <div>
+//             {/* <LoginModal></LoginModal> */}
+//         </div>
+//     );
+// };
 
-export default Login;
+// export default Login;
