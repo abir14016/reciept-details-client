@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from "react-hook-form";
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom';
+import auth from '../../../firebase.init';
 
 const RegisterModal = () => {
+    const [
+        createUserWithEmailAndPassword,
+        emailUser,
+        // emailLoading,
+        // emailError,
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile] = useUpdateProfile(auth);
+
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const onSubmit = data => {
-        console.log(data);
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (emailUser) {
+            navigate('/');
+        }
+    }, [emailUser, navigate]);
+    const onSubmit = async data => {
+        await createUserWithEmailAndPassword(data.email, data.password);
+        await updateProfile({ displayName: data.name });
     }
     return (
         <div>
@@ -48,10 +67,17 @@ const RegisterModal = () => {
                                     required: {
                                         value: true,
                                         message: 'email is required'
+                                    },
+                                    pattern: {
+                                        value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+                                        message: 'provide a valid email'
                                     }
                                 })}
                             />
                             {errors.email?.type === 'required' && <p className="text-error text-left">
+                                {errors.email.message}
+                            </p>}
+                            {errors.email?.type === 'pattern' && <p className="text-error text-left">
                                 {errors.email.message}
                             </p>}
                         </div>
@@ -69,10 +95,24 @@ const RegisterModal = () => {
                                     required: {
                                         value: true,
                                         message: 'password is required'
+                                    },
+                                    pattern: {
+                                        value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                                        message: 'password must contain at least one number and letter'
+                                    },
+                                    minLength: {
+                                        value: 8,
+                                        message: 'password must be 8 character or longer'
                                     }
                                 })}
                             />
                             {errors.password?.type === 'required' && <p className="text-error text-left">
+                                {errors.password.message}
+                            </p>}
+                            {errors.password?.type === 'pattern' && <p className="text-error text-left">
+                                {errors.password.message}
+                            </p>}
+                            {errors.password?.type === 'minLength' && <p className="text-error text-left">
                                 {errors.password.message}
                             </p>}
                         </div>

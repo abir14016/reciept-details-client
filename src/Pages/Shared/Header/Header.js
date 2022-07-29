@@ -3,8 +3,16 @@ import onitoLogo from "../../../assets/logo/onito-logo.png";
 import { Link } from "react-router-dom";
 import LoginModal from '../../Login/Login/LoginModal';
 import RegisterModal from '../../Login/Register/RegisterModal';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import auth from '../../../firebase.init';
+import { signOut } from 'firebase/auth';
 
 const Header = () => {
+    const [user] = useAuthState(auth);
+    console.log(user);
+    const logout = () => {
+        signOut(auth);
+    };
     return (
         <div className='bg-base-200 sticky top-0 z-50'>
             <div className="navbar md:container md:mx-auto">
@@ -29,10 +37,28 @@ const Header = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <label htmlFor="register-modal" className="btn modal-button btn-outline btn-primary mx-2">Register</label>
+                    {
+                        !user && <label htmlFor="register-modal" className="btn modal-button btn-outline btn-primary mx-2">Register</label>
+                    }
                     <RegisterModal></RegisterModal>
-                    <label htmlFor="login-modal" className="btn modal-button btn-primary">Login</label>
+                    {
+                        !user && <label htmlFor="login-modal" className="btn modal-button btn-primary">Login</label>
+                    }
                     <LoginModal></LoginModal>
+                    {
+                        user && <button onClick={logout} className="btn btn-outline btn-primary mx-2">Logout</button>
+                    }
+                    {
+                        user && <div class="avatar online placeholder">
+                            <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
+                                <span class="text-xl">
+                                    {
+                                        user?.email[0]?.toUpperCase()
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
