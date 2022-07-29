@@ -2,6 +2,7 @@ import React from 'react';
 import onitoLogo from "../../../assets/logo/onito-logo.png";
 import { Link } from "react-router-dom";
 import LoginModal from '../../Login/Login/LoginModal';
+import RegisterModal from '../../Login/Register/RegisterModal';
 
 const Header = () => {
     return (
@@ -28,7 +29,9 @@ const Header = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <label for="login-modal" class="btn modal-button btn-primary">Login</label>
+                    <label htmlFor="register-modal" className="btn modal-button btn-outline btn-primary mx-2">Register</label>
+                    <RegisterModal></RegisterModal>
+                    <label htmlFor="login-modal" className="btn modal-button btn-primary">Login</label>
                     <LoginModal></LoginModal>
                 </div>
             </div>
