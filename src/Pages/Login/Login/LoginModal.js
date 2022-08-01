@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
+import auth from '../../../firebase.init';
+import Loading from '../../Shared/Loading/Loading';
 
 const LoginModal = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
+
+    const [
+        signInWithEmailAndPassword,
+        emailUser,
+        emailLoading,
+        emailError,
+    ] = useSignInWithEmailAndPassword(auth);
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (emailUser) {
+            navigate('/');
+        }
+    }, [emailUser, navigate]);
+
     const onSubmit = data => {
-        console.log(data);
+        signInWithEmailAndPassword(data.email, data.password);
     }
     return (
         <div>
@@ -40,7 +59,7 @@ const LoginModal = () => {
                                 <span className="label-text text-base">Password</span>
                             </label>
                             <input
-                                type="text"
+                                type="password"
                                 placeholder="password"
                                 className="input input-bordered"
                                 {...register("password", {
@@ -54,6 +73,15 @@ const LoginModal = () => {
                                 {errors.password.message}
                             </p>}
                         </div>
+                        {
+                            emailLoading && <Loading></Loading>
+                        }
+                        {
+                            emailError && <p className='text-error font-semibold'>{emailError.message}</p>
+                        }
+                        {
+                            emailUser && <p className='text-success font-semibold'>Successfully Logged in</p>
+                        }
                         <div className="form-control mt-6">
                             <button type="submit" className="btn btn-primary">Login</button>
                         </div>

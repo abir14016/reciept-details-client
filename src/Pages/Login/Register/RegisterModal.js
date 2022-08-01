@@ -3,13 +3,14 @@ import { useForm } from "react-hook-form";
 import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
+import Loading from '../../Shared/Loading/Loading';
 
 const RegisterModal = () => {
     const [
         createUserWithEmailAndPassword,
         emailUser,
-        // emailLoading,
-        // emailError,
+        emailLoading,
+        emailError,
     ] = useCreateUserWithEmailAndPassword(auth);
     const [updateProfile] = useUpdateProfile(auth);
 
@@ -21,7 +22,9 @@ const RegisterModal = () => {
             navigate('/');
         }
     }, [emailUser, navigate]);
+
     const onSubmit = async data => {
+        console.log(data);
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
     }
@@ -88,7 +91,7 @@ const RegisterModal = () => {
                                 <span className="label-text text-base">Password</span>
                             </label>
                             <input
-                                type="text"
+                                type="password"
                                 placeholder="password"
                                 className="input input-bordered"
                                 {...register("password", {
@@ -116,6 +119,15 @@ const RegisterModal = () => {
                                 {errors.password.message}
                             </p>}
                         </div>
+                        {
+                            emailLoading && <Loading></Loading>
+                        }
+                        {
+                            emailError && <p className='text-error font-semibold'>{emailError.message}</p>
+                        }
+                        {
+                            emailUser && <p className='text-success font-semibold'>Registered Successfully</p>
+                        }
                         <div className="form-control mt-6">
                             <button type="submit" className="btn btn-primary">CREATE ACCOUNT</button>
                         </div>

@@ -9,7 +9,6 @@ import { signOut } from 'firebase/auth';
 
 const Header = () => {
     const [user] = useAuthState(auth);
-    console.log(user);
     const logout = () => {
         signOut(auth);
     };
@@ -49,9 +48,9 @@ const Header = () => {
                         user && <button onClick={logout} className="btn btn-outline btn-primary mx-2">Logout</button>
                     }
                     {
-                        user && <div class="avatar online placeholder">
-                            <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
-                                <span class="text-xl">
+                        user && <div className="avatar online placeholder">
+                            <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
+                                <span className="text-xl">
                                     {
                                         user?.email[0]?.toUpperCase()
                                     }
